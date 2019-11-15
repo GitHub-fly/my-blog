@@ -1,0 +1,78 @@
+/* 基础样式，规约统一前缀 */
+
+/*--------------------全局设置-------------------- */
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	outline: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+ul {
+	list-style: none ;
+}
+
+
+/*--------------------布局设置-------------------- */
+.xun-container {
+	width: 80%;
+	margin: 0 auto;
+}
+
+.xun-row {
+	display: flex;
+}
+
+.xun-col-12 {
+	flex: 1 1 100%;
+}
+
+.xun-col-8 {
+	flex: 1 1 66.6%;
+}
+
+.xun-col-6 {
+	flex: 1 1 50%;
+}
+
+.xun-col-4 {
+	flex: 1 1 33.3%;
+}
+
+.xun-clo-3 {
+	flex: 1 1 25%;
+}
+
+.xun-col-2 {
+	flex: 1 1 16.6%;
+}
+
+.xun-col-1 {
+	flex: 1 1 8.3%;
+}
+/*--------------------对齐方式设置-------------------- */
+
+/* flex横向布局的对齐，主轴副轴均居中 */
+.xun-fx-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* flex横向布局的对齐，横向左对齐,纵向居中 */
+.xun-fx-left {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+/* flex横向布局的对齐，横向右对齐，纵向居中 */
+.xun-fx-right {
+	display: flex;	
+	justify-content: center;
+	align-items: center;
+}
