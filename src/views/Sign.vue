@@ -1,4 +1,4 @@
-<template>
+ <template>
 	<div class="full main-color">
 		<div class="login-box">
 			<div class="tab">
@@ -7,9 +7,9 @@
 			</div>
 
 			<div class="tab-box" v-if="show && selected === 0">
-				<input type="text" placeholder="请输入手机号/邮箱" v-model="userDto.mobile" />
-				<input type="password" placeholder="请输入6-16位密码" minlength="6" maxlength="16" v-model="userDto.password" />
-				<input type="submit" class="login-btn" value="登录" @click="signIn(userDto)" />
+				<input type="text" placeholder="请输入手机号/邮箱" v-model="mob" maxlength="11"/>
+				<input type="password" placeholder="请输入6-16位密码" minlength="6" maxlength="16" v-model="password" />
+				<input type="submit" class="login-btn" value="登录" @click="signIn()" />
 				<span class="span-tab" @click="changeTab">没有账号，立即前往注册</span>
 			</div>
 
@@ -59,6 +59,7 @@
 				</div>
 			</div>
 		</div>
+		<router-link to="/" class="back">返回</router-link>
 	</div>
 </template>
 
@@ -85,20 +86,26 @@ export default {
 			timer: null,
 			status: '',
 			yzmDisabled: false,
-			user: null
+			user: null,
+			mob: '',
+			password: ''
 		};
 	},
 
 	methods: {
-
-		signIn(userDto) {
+		signIn() {
+			this.userDto.mobile = this.mob
+			this.userDto.password = this.password
 			this.axios.post('http://localhost:8080/api/sign-in', JSON.stringify(this.userDto))
 			.then(response => {
 				if (response.data.msg == '登录成功') {
+					alert(response.data.msg)
 					// 将后台的用户信息存入本地存储
 					localStorage.user = JSON.stringify(response.data.data);
 					// 路由跳转
 					this.$router.push('/');
+				} else {
+					alert('密码错误')
 				}
 			});
 		},
@@ -197,6 +204,7 @@ export default {
 			this.axios.post('http://localhost:8080/api/register', JSON.stringify(this.userDto))
 			.then(response => {
 				if (response.data.msg == '注册成功') {
+					alert("注册成功")
 					// 将后台的用户信息存入本地存储
 					localStorage.user = JSON.stringify(response.data.data);
 					// 路由跳转
@@ -209,6 +217,13 @@ export default {
 </script>
 
 <style scoped>
+	
+.back {
+		position: absolute;
+		top: 1%;
+		right: 1%;
+	}
+	
 .full {
 	position: absolute;
 	top: 0;
