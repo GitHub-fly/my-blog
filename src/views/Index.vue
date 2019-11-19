@@ -2,7 +2,7 @@
 	<div class="xun-row">
 		<div class="xun-col-8">
 			<div class="grid">
-				<div class="card card1"><img :src="this.hotArticles[1].cover" alt="" /></div>
+				<div class="card card1"></div>
 				<div class="card card2"></div>
 				<div class="card card3"></div>
 				<div class="card card4"></div>
@@ -11,15 +11,24 @@
 			</div>
 
 			<div class="row">
-				<div class="article" v-for="(article, index) in hotArticles.splice(0, 10)" :key="index">
+				<div class="article" v-for="(article, index) in hotArticles.slice(10, 20)" :key="index">
 					<div class="text">
-						<h class="title">{{ article.title }}</h>
-						<p class="content">{{ article.content }}</p>
+						<h class="xun-title" @click="toDetails(article.id)">{{ article.title }}</h>
+						<p class="xun-content">{{ article.content }}</p>
 						<div class="number">
-							<span class="meta">{{ article.diamond }}</span>
-							<span class="meta">{{ article.nickname }}</span>
-							<span class="meta">{{ article.comments }}</span>
-							<span class="meta">{{ article.likes }}</span>
+							<span class="xun-meta">
+								<i class="iconfont" style="color: rgb(216, 30, 6);">&#xe62c;</i>
+								{{ article.diamond }}k
+							</span>
+							<span class="xun-meta">{{ article.nickname }}</span>
+							<span class="xun-meta">
+								<i class="iconfont">&#xe6a4;</i>
+								{{ article.comments }}
+							</span>
+							<span class="meta">
+								<i class="iconfont">&#xe631;</i>
+								{{ article.likes }}
+							</span>
 						</div>
 					</div>
 					<div class="img"><img :src="getImage(article.cover)" :alt="article.nickname" /></div>
@@ -29,7 +38,50 @@
 
 		<div class="blank"><h></h></div>
 
-		<div class="xun-col-2"><h1></h1></div>
+		<div class="xun-col-2">
+			<div class="side-box">
+				<h class="side-title">精彩发现</h>
+				<div class="discover-body">
+					
+				</div>
+			</div>
+			<div class="side-box">
+				<h class="side-title">推荐文章</h>
+				<div class="recommend-body">
+					<div class="recommend-artile" v-for="(article, index) in hotArticles.slice(0, 9)" :key="index">
+						<div class="side-text">
+							<button class="btn">{{ index + 1 }}</button>
+							<p class="xun-meta">{{ article.title.substring(0, 15) }}...</p>
+						</div>
+						<div class="side-img">
+							<img :src="getImage(article.cover)">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="side-box">
+				<h class="side-title">推荐作者</h>
+				<div class="author-body">
+					<div class="recommend-author" v-for="(user, index) in hotUser.slice(5, 10)" :key="index">
+						<div class="side-user-img">
+							<img :src="getImage(user.avatar)">
+						</div>
+						<div class="side-user-text">
+							<div class="user-info">
+								<h class="name">{{ user.nickname }}</h>
+								<h class="info">{{ user.introduction }}</h>
+							</div>
+							<div class="icon">
+								<span>关注</span>
+								<span>{{ user.fans }}</span>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
 	</div>
 </template>
 
@@ -37,44 +89,152 @@
 export default {
 	data() {
 		return {
-			hotArticles: []
+			url: 'http://localhost:8080',
+			hotArticles: [],
+			hotUser:[]
 		};
 	},
 
 	created() {
-		this.axios.get('http://localhost:8080/api/article/hot').then(res => {
+		this.axios.get(this.url + '/api/article/hot')
+		.then(res => {
 			this.hotArticles = res.data.data;
+		});
+		
+		this.axios.get(this.url + '/api/user/hot')
+		.then(resp => {
+			this.hotUser = resp.data.data;
 		});
 	},
 
 	methods: {
 		getImage(url) {
 			return 'http://images.weserv.nl/?url=' + url;
+		},
+		toDetails(id) {
+			this.$router.push('/detail/' + id);
 		}
+		
 	},
 
 	computed: {}
-};
+}
 </script>
 
 <style scoped>
+
+/* 推荐博主快的设计 */
+.icon {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.info {
+	font-size: 12px;
+}
+.name {
+	font-size: 15px;
+	font-weight: 700;
+}
+.user-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 80%;
+}
+.side-user-img {
+	height: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.side-user-img img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+.side-user-text {
+	width: 83%;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+}
+.recommend-author {
+	margin-bottom: 25px;
+	display: flex;
+	justify-content: space-between;
+}
+
+
+/* 推荐文章块的设计 */
+.btn {
+	width: 18px;
+	height: 18px;
+	border: #333333;
+	background-color: #EEEEEE;
+}
+
+.side-img {
+	width: 30%;
+	height: 100%;
+}
+	
+.side-text {
+	width: 68%;
+	display: flex;
+}	
+
+.recommend-artile {
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+	height: 70px;
+}
+
+
+.author-body {
+	width: 100%;
+	height: 300px;
+}
+.discover-body {
+	width: 100%;
+	height: 300px;
+	background-color: #FFFF00;
+}
+.side-box {
+	margin-top: 50px;
+	display: flex;
+	flex-direction: column;
+}
+.side-title {
+	font-size: 30px;
+	font-weight: 700;
+	font-family: "楷体";
+	margin-bottom: 10px;
+}
+.xun-meta {
+	margin-right: 5%;
+}
 .number {
 	margin-top: 10px;
 	display: flex;
-	justify-content: space-around;
 }
-.content {
+.xun-title:hover {
+	/* border-bottom: 2px solid #333333; */
+	text-decoration: underline;
+	color: rgb(229, 126, 101);
+	/* opacity: 0.5; */
+}
+.xun-content {
 	margin-top: 10px;
 }
-
 .text {
 	width: 78%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 }
-
-img {
+.img img {
 	height: 80%;
 }
 .img {
@@ -83,26 +243,22 @@ img {
 	display: flex;
 	align-items: center;
 }
-
 .article {
 	border-radius: 20px;
 	width: 100%;
 	/* height: 240px; */
-	border: 5px solid aqua;
+	border: 2px dashed #DDDDDD;
 	margin: 0 auto;
 	margin-bottom: 20px;
 	display: flex;
 	padding: 10px;
 	justify-content: space-between;
 }
-
 .row {
 	margin-top: 20px;
 	display: flex;
 	flex-wrap: wrap;
-	background-color: #ffff00;
 }
-
 .grid {
 	background-color: #00bbdd;
 	display: grid;
@@ -112,13 +268,8 @@ img {
 	grid-row-gap: 3%;
 	height: 800px;
 }
-
 .blank {
-	background-color: #42b983;
 	flex: 1 1 auto;
-}
-.xun-col-2 {
-	background-color: beige;
 }
 .card {
 	border: 10px solid #333333;

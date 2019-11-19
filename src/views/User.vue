@@ -1,9 +1,11 @@
 <template>
-	<h2>用户列表页</h2>
+	<div>
+		<h2>用户列表页</h2>
+	</div>
 </template>
 
-<script>
-</script>
+<script></script>
 
-<style>
+<style scoped>
+	
 </style>

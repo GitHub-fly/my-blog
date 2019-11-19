@@ -27,12 +27,11 @@
 							minlength="11"
 							maxlength="11"
 							v-model="userDto.mobile"
-							:disabled="yzmDisabled"
-							@input.prevent="checkLength"
+							@input="checkMoblie()"
 						/>
 						<input type="text" class="input-tel" placeholder="请输入验证码" />
 					</div>
-					<input class="input-tel-btn" :class="{ regist: hover }" type="submit" :value="msg" :disabled="codeDisabled" @click="getCode" />
+					<input class="input-tel-btn" :class="{ regist: hover }" type="submit" :value="msg" :disabled="yzmDisabled" @click="getCode()" />
 				</div>
 				<input type="submit" class="regist-btn" value="注册" @click="register(userDto)" />
 			</div>
@@ -72,7 +71,6 @@ export default {
 				password: '',
 				nickname: ''
 			},
-			codeDisabled: true,
 			msg: '获取验证码',
 			info: '',
 			isActive: true,
@@ -85,7 +83,7 @@ export default {
 			countMsg: 2,
 			timer: null,
 			status: '',
-			yzmDisabled: false,
+			yzmDisabled: true,
 			user: null,
 			mob: '',
 			password: ''
@@ -106,6 +104,7 @@ export default {
 					this.$router.push('/');
 				} else {
 					alert('密码错误')
+					this.clear()
 				}
 			});
 		},
@@ -114,16 +113,15 @@ export default {
 			this.isActive = !this.isActive;
 			this.selected = this.selected == 0 ? 1 : 0;
 		},
-
-		checkLength() {
-			if (Number(this.userDto.mobile) && this.userDto.mobile.length == 11) {
-				this.codeDisabled = false;
-				return true;
+		
+		checkMoblie() {
+			if (!/^1[34578]\d{9}$/.test(this.userDto.mobile) || this.userDto.mobile.length != 11) {
+				this.yzmDisabled = true
 			} else {
-				return false;
+				this.yzmDisabled = false
 			}
 		},
-
+		
 		getCode() {
 			if (!this.timer) {
 				this.timer = setInterval(() => {
@@ -131,9 +129,7 @@ export default {
 						this.countdown--;
 						if (this.countdown != 0) {
 							this.hover = false;
-							this.codeDisabled = true;
 							this.msg = '重新发送(' + this.countdown + ')';
-							this.yzmDisabled = true;
 						} else {
 							clearInterval(this.timer);
 							this.status = 'success';
@@ -141,8 +137,6 @@ export default {
 							this.countdown = 10;
 							this.timer = null;
 							this.hover = true;
-							this.codeDisabled = true;
-							this.yzmDisabled = false;
 						}
 					}
 				}, 10);
@@ -156,7 +150,7 @@ export default {
 			this.userDto.password = '';
 			this.pwd2 = '';
 			this.status = '';
-			this.codeDisabled = true;
+			this.password = ''
 		},
 
 		// 提示信息的方法,都存在两秒钟
@@ -190,16 +184,23 @@ export default {
 				this.showMsg()
 				return
 			}
+			if (this.userDto.password != this.pwd2) {
+				this.info = '两次密码不相同'
+				this.showMsg()
+				return
+			}
 			if (this.userDto.mobile == '') {
 				this.info = '手机号不能为空'
 				this.showMsg()
 				return
 			}
-			if (!/^1[34578]\d{9}$/.test(this.userDto.mobile)) {
+			if (!/^1[34578]\d{9}$/.test(this.userDto.mobile) || this.userDto.mobile.length != 11) {
 				this.info = '手机号码格式错误'
+				this.showMsg()
 				this.userDto.mobile = ''
 				return
 			}
+			
 			// 注册信息完全符合要求则进行下面注册操作
 			this.axios.post('http://localhost:8080/api/register', JSON.stringify(this.userDto))
 			.then(response => {

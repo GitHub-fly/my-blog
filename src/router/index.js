@@ -39,6 +39,10 @@ const routes = [
 			{
 				path: '/u',
 				component: User
+			},
+			{
+				path:'/detail/*',
+				component: ArticleDetail
 			}
 		]
 	},

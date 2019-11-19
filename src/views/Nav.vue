@@ -41,7 +41,6 @@
 			logout() {
 				// localStorage.setItem('user', this.user)
 				this.user = null
-				this.$router.push('/')
 				alert("退出")
 			}
 		},
@@ -55,8 +54,8 @@
 <style scoped>
 	
 	.img {
-		height: 50px;
-		width: 50px;
+		height: 35px;
+		width: 35px;
 	}
 	
 	img {

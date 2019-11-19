@@ -4,20 +4,21 @@ img {
 	height: 100%;
 }
 
-.title {
+.xun-title {
 	font-size: 30px;
 	font-weight: 700;
 	font-family: "楷体";
+	cursor: pointer;
 }
 
-.content {
+.xun-content {
 	font-size: 20px;
 	font-weight: 500;
-	font-family: "仿宋";
+	font-family: "楷体";
 	text-indent: 2em;
 }
 
-.meta {
+.xun-meta {
 	font-size: 15px;
 }
 
@@ -27,8 +28,8 @@ img {
 	display: flex;
 	margin: 0 auto;
 	/* 主页背景的深灰色 */
-	background-color: darkgray;							
-	margin-top: 15px;
+	/* background-color: darkgray;							 */
+	margin-top: 60px;
 }
 
 .xun-row {
