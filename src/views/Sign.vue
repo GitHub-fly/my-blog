@@ -95,7 +95,7 @@ export default {
 			this.userDto.mobile = this.mob
 			this.userDto.password = this.password
 			this.axios.post('http://localhost:8080/api/sign-in', JSON.stringify(this.userDto))
-			.then(response => {
+			.then(response => {				
 				if (response.data.msg == '登录成功') {
 					alert(response.data.msg)
 					// 将后台的用户信息存入本地存储
@@ -110,7 +110,7 @@ export default {
 		},
 
 		changeTab: function() {
-			this.isActive = !this.isActive;
+			this.isActive = !this.isActive; 
 			this.selected = this.selected == 0 ? 1 : 0;
 		},
 		

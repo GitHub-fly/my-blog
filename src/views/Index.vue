@@ -42,7 +42,13 @@
 			<div class="side-box">
 				<h class="side-title">精彩发现</h>
 				<div class="discover-body">
-					
+					<div class="row">
+						<div class="topic-box" v-for="(topic, index) in hotTopic" :key="index">
+							<router-link to="" class="topic">
+								{{topic.topicName}}
+							</router-link>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="side-box">
@@ -77,7 +83,6 @@
 							</div>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>
@@ -89,22 +94,27 @@
 export default {
 	data() {
 		return {
-			url: 'http://localhost:8080',
 			hotArticles: [],
-			hotUser:[]
+			hotUser:[],
+			hotTopic: []
 		};
 	},
 
 	created() {
-		this.axios.get(this.url + '/api/article/hot')
+		this.axios.get(this.baseUrl + '/article/hot')
 		.then(res => {
-			this.hotArticles = res.data.data;
-		});
+			this.hotArticles = res.data.data
+		})
 		
-		this.axios.get(this.url + '/api/user/hot')
-		.then(resp => {
-			this.hotUser = resp.data.data;
-		});
+		this.axios.get(this.baseUrl + '/user/hot')
+		.then(res => {
+			this.hotUser = res.data.data
+		})
+		
+		this.axios.get(this.baseUrl + '/topic/hot')
+		.then(res => {
+			this.hotTopic = res.data.data
+		})
 	},
 
 	methods: {
@@ -122,7 +132,28 @@ export default {
 </script>
 
 <style scoped>
-
+	
+/* 精彩发现快的设计 */
+.topic:hover {
+	color: #DDDDDD;
+}
+.topic-box:hover {
+	background-color: rgb(105, 107, 83);
+}
+.topic {
+	font-size: 13px;
+	line-height: 17px;
+}
+.topic-box {
+	background-color: rgb(221, 222, 194);
+	margin: 0px 10px 10px 0px;
+	padding: 3px 15px 3px 15px;
+	border-radius: 20px;
+	transform: none;
+	/* 两个时间参数,一个表示画多长时间完成动画,另一个表示多长时间后开始动画 */
+	transition: all 0.3s ease 0s;
+}
+	
 /* 推荐博主快的设计 */
 .icon {
 	display: flex;
@@ -143,7 +174,6 @@ export default {
 	width: 80%;
 }
 .side-user-img {
-	height: 60px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -155,7 +185,6 @@ export default {
 }
 .side-user-text {
 	width: 83%;
-	height: 60px;
 	display: flex;
 	justify-content: space-between;
 }
@@ -194,12 +223,9 @@ export default {
 
 .author-body {
 	width: 100%;
-	height: 300px;
 }
 .discover-body {
 	width: 100%;
-	height: 300px;
-	background-color: #FFFF00;
 }
 .side-box {
 	margin-top: 50px;
@@ -224,6 +250,11 @@ export default {
 	text-decoration: underline;
 	color: rgb(229, 126, 101);
 	/* opacity: 0.5; */
+}
+.xun-title {
+	transform: none;
+	/* 两个时间参数,一个表示画多长时间完成动画,另一个表示多长时间后开始动画 */
+	transition: all 0.3s ease 0s;
 }
 .xun-content {
 	margin-top: 10px;
@@ -255,7 +286,7 @@ export default {
 	justify-content: space-between;
 }
 .row {
-	margin-top: 20px;
+	margin-top: 5px;
 	display: flex;
 	flex-wrap: wrap;
 }

@@ -2,10 +2,10 @@
 	<div>
 		<div class="nav">
 			<ul>
-				<li><router-link to="/index">主页</router-link></li>
-				<li><router-link to="/c">专题</router-link></li>
-				<li><router-link to="/p">文章</router-link></li>
-				<li><router-link to="/u">作者</router-link></li>
+				<li><router-link to="/index" class="xun-a">主页</router-link></li>
+				<li><router-link to="/c" class="xun-a">专题</router-link></li>
+				<li><router-link to="/p" class="xun-a">文章</router-link></li>
+				<li><router-link to="/u" class="xun-a">作者</router-link></li>
 			</ul>
 			<div class="changeBox">
 				<router-link to="/sign" v-if="this.user === null" class="sgin">去登录</router-link>
@@ -52,6 +52,13 @@
 </script>
 
 <style scoped>
+	
+	.changeBox {
+		width: 13%;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+	}
 	
 	.img {
 		height: 35px;

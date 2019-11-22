@@ -25,7 +25,7 @@ export default {
 		// 取出地址中最后的id值
 		var articleId = query.substring(begin)
 		// 获取对应文章的详情内容
-		this.axios.get('http://localhost:8080/api/article/detail/' + articleId)
+		this.axios.get(this.baseUrl + '/article/detail/' + articleId)
 		.then(res => {
 			this.articleDetail = res.data.data
 		})

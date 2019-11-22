@@ -6,12 +6,15 @@
 }
 
 a {
+	text-decoration: none;
+	color: rgba(33, 33, 33, 0.8);
+}
+
+.xun-a {
+	letter-spacing: 20px;
 	font-size: 22px;
 	font-weight: 700;
 	font-family: "microsoft yahei";
-	text-decoration: none;
-	letter-spacing: 20px;
-	color: rgba(33, 33, 33, 0.8);
 }
 
 ul {
@@ -38,13 +41,6 @@ ul li {
 	position: fixed;
 	top: 0;
 	margin: 0 auto;
-}
-
-.changeBox {
-	width: 13%;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
 }
 
 .main-color {
