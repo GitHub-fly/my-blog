@@ -10,9 +10,10 @@
 			<div class="changeBox">
 				<router-link to="/sign" v-if="this.user === null" class="sgin">去登录</router-link>
 				<div class="img">
-					<img :src="getImage(user.avatar)" :alt="user.nickname" v-if="this.user !== null">
+					<img :src="getImage(user.avatar)" :alt="user.nickname" v-if="this.user !== null"
+					style="cursor: pointer;" @click="toUserDetail(user.id)">
 				</div>
-				<h3 @click="logout()" v-if="this.user !== null" style="cursor:  pointer;">退出</h3> 
+				<h3 @click="logout()" v-if="this.user !== null" style="cursor: pointer;">退出</h3> 
 			</div>
 		</div>
 		<router-view class="xun-container"/>
@@ -42,6 +43,10 @@
 				// localStorage.setItem('user', this.user)
 				this.user = null
 				alert("退出")
+			},
+			
+			toUserDetail(id) {
+				this.$router.push('/user/detail/' + id)
 			}
 		},
 		

@@ -2,12 +2,24 @@
 	<div class="xun-row">
 		<div class="xun-col-8">
 			<div class="grid">
-				<div class="card card1"></div>
-				<div class="card card2"></div>
-				<div class="card card3"></div>
-				<div class="card card4"></div>
-				<div class="card card5"></div>
-				<div class="card card6"></div>
+				<div class="card card1">
+					<img src="http://r.photo.store.qq.com/psb?/V11Inv5a125WKz/3X56uOwskDDCBPYkEL1F5KFQtHGzdTypdz*nAOhzU8k!/r/dA8BAAAAAAAA" alt="" style="border-radius: 18px;">
+				</div>
+				<div class="card card2">
+					<img src="http://r.photo.store.qq.com/psb?/V11Inv5a125WKz/ExSizy4qpBsICHhYf5CAf.DpmIQkH702XLW132YRZ7w!/r/dLgAAAAAAAAA" alt="" style="border-radius: 18px;">
+				</div>
+				<div class="card card3">
+					<img src="http://r.photo.store.qq.com/psb?/V11Inv5a125WKz/Y*.iN.RxNMZoEJdh375bY4IpBEEBA6V*yg6mDCGXbgU!/r/dFMBAAAAAAAA" alt="" style="border-radius: 18px;">
+				</div>
+				<div class="card card4">
+					<img src="http://r.photo.store.qq.com/psb?/V11Inv5a125WKz/fq1UdqO3I*w7NrOBzh6D9XcGFu9v7C5QlkWoExgl6E4!/r/dL8AAAAAAAAA" alt="" style="border-radius: 18px;">
+				</div>
+				<div class="card card5">
+					<img src="http://r.photo.store.qq.com/psb?/V11Inv5a125WKz/wB*o4D3ZlidClBoPY5DRUpV5yGyPkdl0*ro5LqCHpUU!/r/dL8AAAAAAAAA" alt="" style="border-radius: 18px;">
+				</div>
+				<div class="card card6">
+					<img src="http://r.photo.store.qq.com/psb?/V11Inv5a125WKz/cRMQrVy26*Lq3MzhnM8b9udJI.4Ohm9rOTo5h7NvfUg!/r/dDUBAAAAAAAA" alt="" style="border-radius: 18px;">
+				</div>
 			</div>
 
 			<div class="row">
@@ -122,7 +134,7 @@ export default {
 			return 'http://images.weserv.nl/?url=' + url;
 		},
 		toDetails(id) {
-			this.$router.push('/detail/' + id);
+			this.$router.push('/article/detail/' + id);
 		}
 		
 	},
@@ -286,24 +298,24 @@ export default {
 	justify-content: space-between;
 }
 .row {
-	margin-top: 5px;
+	margin-top: 30px;
 	display: flex;
 	flex-wrap: wrap;
 }
 .grid {
-	background-color: #00bbdd;
 	display: grid;
 	grid-template-columns: 31% 31% 31%;
 	grid-template-rows: 40% 40%;
 	grid-column-gap: 3.5%;
 	grid-row-gap: 3%;
-	height: 800px;
+	height: 900px;
 }
 .blank {
 	flex: 1 1 auto;
 }
 .card {
-	border: 10px solid #333333;
+	border: 5px solid #333333;
+	border-radius: 25px;
 }
 .card1 {
 	grid-column-start: 1;
