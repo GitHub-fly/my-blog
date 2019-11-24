@@ -1,4 +1,4 @@
- <template>
+<template>
 	<div class="full main-color">
 		<div class="login-box">
 			<div class="tab">
@@ -7,8 +7,12 @@
 			</div>
 
 			<div class="tab-box" v-if="show && selected === 0">
-				<input type="text" placeholder="请输入手机号/邮箱" v-model="mob" maxlength="11"/>
+				<input type="text" placeholder="请输入手机号/邮箱" v-model="mob" maxlength="11" />
 				<input type="password" placeholder="请输入6-16位密码" minlength="6" maxlength="16" v-model="password" />
+				<div class="code-box">
+					<input type="text" placeholder="请输入验证码" v-model="userDto.code" />
+					<div class="img"><img ref="codeImg" @click="refresh()" style="cursor: pointer;"/></div>
+				</div>
 				<input type="submit" class="login-btn" value="登录" @click="signIn()" />
 				<span class="span-tab" @click="changeTab">没有账号，立即前往注册</span>
 			</div>
@@ -20,15 +24,7 @@
 				<div class="tel-box">
 					<div class="tel-code-box">
 						<!-- 失去焦点时的方法 -->
-						<input
-							class="input-tel"
-							type="tel"
-							placeholder="请绑定手机号"
-							minlength="11"
-							maxlength="11"
-							v-model="userDto.mobile"
-							@input="checkMoblie()"
-						/>
+						<input class="input-tel" type="tel" placeholder="请绑定手机号" minlength="11" maxlength="11" v-model="userDto.mobile" @input="checkMoblie()" />
 						<input type="text" class="input-tel" placeholder="请输入验证码" />
 					</div>
 					<input class="input-tel-btn" :class="{ regist: hover }" type="submit" :value="msg" :disabled="yzmDisabled" @click="getCode()" />
@@ -40,7 +36,6 @@
 				<span class="line"></span>
 				<span class="login-3rd">第三方登录</span>
 				<span class="line"></span>
-				
 			</div>
 
 			<div class="icon-box" v-if="show && selected === 0">
@@ -69,7 +64,8 @@ export default {
 			userDto: {
 				mobile: '',
 				password: '',
-				nickname: ''
+				nickname: '',
+				code: ''
 			},
 			msg: '获取验证码',
 			info: '',
@@ -86,42 +82,78 @@ export default {
 			yzmDisabled: true,
 			user: null,
 			mob: '',
-			password: ''
+			password: '',
+			token: ''
 		};
 	},
 
+	created() {
+		this.axios.get(this.baseUrl + '/code', { responseType: 'blob' }).then(res => {
+			var img = this.$refs.codeImg;
+			let url = window.URL.createObjectURL(res.data);
+			img.src = url;
+			// 取得后台通过响应头返回的sessionId的值
+			this.token = res.headers['access-token'];
+		});
+	},
+
 	methods: {
+		refresh() {
+			this.axios.get(this.baseUrl + '/code', { responseType: 'blob' }).then(res => {
+				var img = this.$refs.codeImg;
+				let url = window.URL.createObjectURL(res.data);
+				img.src = url;
+			});
+		},
+
 		signIn() {
-			this.userDto.mobile = this.mob
-			this.userDto.password = this.password
-			this.axios.post('http://localhost:8080/api/sign-in', JSON.stringify(this.userDto))
-			.then(response => {				
-				if (response.data.msg == '登录成功') {
-					alert(response.data.msg)
-					// 将后台的用户信息存入本地存储
-					localStorage.user = JSON.stringify(response.data.data);
-					// 路由跳转
+			
+			this.userDto.mobile = this.mob;
+			this.userDto.password = this.password;
+			// this.axios.post('http://localhost:8080/api/sign-in', JSON.stringify(this.userDto)).then(response => {
+			// 	if (response.data.msg == '登录成功') {
+			// 		alert(response.data.msg);
+			// 		// 将后台的用户信息存入本地存储
+			// 		localStorage.user = JSON.stringify(response.data.data);
+			// 		// 路由跳转
+			// 		this.$router.push('/');
+			// 	} else {
+			// 		alert('密码错误');
+			// 		this.clear();
+			// 	}
+			// });
+			this.axios({
+				method: 'post',
+				url: this.baseUrl + '/sign-in',
+				data: JSON.stringify(this.userDto),
+				headers: {
+					'Access-Token': this.token
+				},
+			}).then(res => {
+				if (res.data.msg === '登录成功') {
+					alert('登录成功');
+					localStorage.setItem('user', JSON.stringify(res.data.data));
 					this.$router.push('/');
 				} else {
-					alert('密码错误')
-					this.clear()
+					alert(res.data.msg);
+					this.userDto.code = '';
 				}
 			});
 		},
 
 		changeTab: function() {
-			this.isActive = !this.isActive; 
+			this.isActive = !this.isActive;
 			this.selected = this.selected == 0 ? 1 : 0;
 		},
-		
+
 		checkMoblie() {
 			if (!/^1[34578]\d{9}$/.test(this.userDto.mobile) || this.userDto.mobile.length != 11) {
-				this.yzmDisabled = true
+				this.yzmDisabled = true;
 			} else {
-				this.yzmDisabled = false
+				this.yzmDisabled = false;
 			}
 		},
-		
+
 		getCode() {
 			if (!this.timer) {
 				this.timer = setInterval(() => {
@@ -150,7 +182,7 @@ export default {
 			this.userDto.password = '';
 			this.pwd2 = '';
 			this.status = '';
-			this.password = ''
+			this.password = '';
 		},
 
 		// 提示信息的方法,都存在两秒钟
@@ -173,58 +205,55 @@ export default {
 		},
 
 		register(userDto) {
-			
 			if (this.userDto.nickname == '') {
-				this.info = '用户名不能为空'
-				this.showMsg()
-				return
+				this.info = '用户名不能为空';
+				this.showMsg();
+				return;
 			}
 			if (this.userDto.password == '' || this.pwd2 == '') {
-				this.info = '密码不能为空'
-				this.showMsg()
-				return
+				this.info = '密码不能为空';
+				this.showMsg();
+				return;
 			}
 			if (this.userDto.password != this.pwd2) {
-				this.info = '两次密码不相同'
-				this.showMsg()
-				return
+				this.info = '两次密码不相同';
+				this.showMsg();
+				return;
 			}
 			if (this.userDto.mobile == '') {
-				this.info = '手机号不能为空'
-				this.showMsg()
-				return
+				this.info = '手机号不能为空';
+				this.showMsg();
+				return;
 			}
 			if (!/^1[34578]\d{9}$/.test(this.userDto.mobile) || this.userDto.mobile.length != 11) {
-				this.info = '手机号码格式错误'
-				this.showMsg()
-				this.userDto.mobile = ''
-				return
+				this.info = '手机号码格式错误';
+				this.showMsg();
+				this.userDto.mobile = '';
+				return;
 			}
-			
+
 			// 注册信息完全符合要求则进行下面注册操作
-			this.axios.post('http://localhost:8080/api/register', JSON.stringify(this.userDto))
-			.then(response => {
+			this.axios.post('http://localhost:8080/api/register', JSON.stringify(this.userDto)).then(response => {
 				if (response.data.msg == '注册成功') {
-					alert("注册成功")
+					alert('注册成功');
 					// 将后台的用户信息存入本地存储
 					localStorage.user = JSON.stringify(response.data.data);
 					// 路由跳转
 					this.$router.push('/');
 				}
-			})
+			});
 		}
 	}
-}
+};
 </script>
 
 <style scoped>
-	
 .back {
-		position: absolute;
-		top: 1%;
-		right: 1%;
-	}
-	
+	position: absolute;
+	top: 1%;
+	right: 1%;
+}
+
 .full {
 	position: absolute;
 	top: 0;
@@ -420,5 +449,16 @@ p {
 	font-family: '楷体';
 	font-size: 30px;
 	font-weight: 300;
+}
+
+.code-box {
+	display: flex;
+	align-items: center;
+	padding-right: 23px;
+	padding-left: 8px;
+}
+.img {
+	height: 40px;
+	width: 200px;
 }
 </style>
