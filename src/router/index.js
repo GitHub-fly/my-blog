@@ -11,8 +11,8 @@ import UserDetail from '@/views/UserDetail.vue'
 import UserFans from '@/views/UserFans.vue'
 import UserFollows from '@/views/UserFollows.vue'
 import Sign from '@/views/Sign.vue'
-
-
+import UserInformation from '@/views/UserInformation.vue'
+import UserArticles from '@/views/UserArticles.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -46,7 +46,22 @@ const routes = [
 			},
 			{
 				path: '/user/detail/*',
-				component: UserDetail
+				component: UserDetail,
+				children: [
+					{
+						path: '/user/detail/*',
+						redirect: '/user/information'
+					},
+					{
+						path: '/user/information',
+						component: UserInformation
+					},
+					{
+						path: '/user/article',
+						component: UserArticles
+					}
+					
+				]
 			}
 		]
 	},
